@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Display Input Value While Typing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      min-width: 400px;
+    }
+    
+    h1 {
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 30px;
+    }
+    
+    .input-group {
+      margin-bottom: 30px;
+    }
+    
+    label {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+    
+    #inputBox {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    
+    #inputBox:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .output-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      min-height: 60px;
+    }
+    
+    .output-label {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    
+    #output {
+      font-size: 20px;
+      font-weight: bold;
+      color: #667eea;
+      min-height: 30px;
+      word-wrap: break-word;
+    }
+    
+    .char-count {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+    
+    .empty-state {
+      color: #ccc;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Live Input Display</h1>
+    
+    <div class="input-group">
+      <label for="inputBox">Type something:</label>
+      <input type="text" id="inputBox" placeholder="Start typing..." />
+    </div>
+    
+    <div class="output-section">
+      <div class="output-label">Live Output:</div>
+      <p id="output" class="empty-state">Your text will appear here...</p>
+      <div class="char-count" id="charCount">Characters: 0</div>
+    </div>
+  </div>
+
+  <script>
+    // Get elements
+    const inputBox = document.getElementById('inputBox');
+    const output = document.getElementById('output');
+    const charCount = document.getElementById('charCount');
+    
+    // Method 1: Using 'input' event (fires on every change)
+    inputBox.addEventListener('input', function(event) {
+      const value = event.target.value;
+      
+      if (value.trim() === '') {
+        output.textContent = 'Your text will appear here...';
+        output.classList.add('empty-state');
+      } else {
+        output.textContent = value;
+        output.classList.remove('empty-state');
+      }
+      
+      // Update character count
+      charCount.textContent = `Characters: ${value.length}`;
+      
+      // Log to console
+      console.log('Current input:', value);
+    });
+    
+    // Alternative methods (commented out):
+    
+    // Method 2: Using 'keyup' event
+    /*
+    inputBox.addEventListener('keyup', function() {
+      output.textContent = this.value || 'Your text will appear here...';
+    });
+    */
+    
+    // Method 3: Using 'keydown' event
+    /*
+    inputBox.addEventListener('keydown', function() {
+      // Note: keydown fires before the character is added
+      setTimeout(() => {
+        output.textContent = this.value || 'Your text will appear here...';
+      }, 0);
+    });
+    */
+    
+    // Method 4: Using 'change' event (fires when input loses focus)
+    /*
+    inputBox.addEventListener('change', function() {
+      output.textContent = this.value || 'Your text will appear here...';
+    });
+    */
+    
+    // Bonus: Add paste event handler
+    inputBox.addEventListener('paste', function(event) {
+      console.log('Text pasted!');
+    });
+  </script>
+</body>
+</html>

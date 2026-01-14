@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Change Text on Button Click</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    
+    #message {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: #f0f0f0;
+      border-radius: 8px;
+    }
+    
+    #changeBtn {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #changeBtn:hover {
+      background: #764ba2;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    #changeBtn:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>DOM Manipulation - Change Text</h1>
+    <div id="message">Hello World</div>
+    <button id="changeBtn">Change Text</button>
+  </div>
+
+  <script>
+    // Get elements
+    const messageElement = document.getElementById('message');
+    const changeButton = document.getElementById('changeBtn');
+    
+    // Array of messages to cycle through
+    const messages = [
+      "Hello World",
+      "Text Changed!",
+      "DOM Manipulation is Easy!",
+      "JavaScript is Awesome!",
+      "Keep Learning!",
+      "You're doing great!"
+    ];
+    
+    let currentIndex = 0;
+    
+    // Add click event listener
+    changeButton.addEventListener('click', function() {
+      currentIndex = (currentIndex + 1) % messages.length;
+      messageElement.textContent = messages[currentIndex];
+      
+      // Add animation effect
+      messageElement.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        messageElement.style.transform = 'scale(1)';
+      }, 200);
+    });
+    
+    // Add transition for smooth animation
+    messageElement.style.transition = 'transform 0.2s ease';
+  </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add List Item Dynamically</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      min-width: 300px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 0;
+    }
+    
+    #list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    
+    #list li {
+      background: #f0f0f0;
+      padding: 12px 15px;
+      margin: 8px 0;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    #addItem {
+      width: 100%;
+      background: #f5576c;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #addItem:hover {
+      background: #f093fb;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .item-number {
+      background: #f5576c;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dynamic List Management</h1>
+    <ul id="list">
+      <li>
+        <span>Item 1</span>
+        <span class="item-number">#1</span>
+      </li>
+    </ul>
+    <button id="addItem">Add Item</button>
+  </div>
+
+  <script>
+    // Get elements
+    const list = document.getElementById('list');
+    const addButton = document.getElementById('addItem');
+    
+    let itemCount = 1; // Start with 1 since we already have Item 1
+    
+    // Add click event listener
+    addButton.addEventListener('click', function() {
+      itemCount++;
+      
+      // Create new list item
+      const newItem = document.createElement('li');
+      
+      // Create text span
+      const textSpan = document.createElement('span');
+      textSpan.textContent = `Item ${itemCount}`;
+      
+      // Create number badge
+      const numberBadge = document.createElement('span');
+      numberBadge.className = 'item-number';
+      numberBadge.textContent = `#${itemCount}`;
+      
+      // Append spans to list item
+      newItem.appendChild(textSpan);
+      newItem.appendChild(numberBadge);
+      
+      // Add the new item to the list
+      list.appendChild(newItem);
+      
+      console.log(`Added: Item ${itemCount}`);
+    });
+    
+    // Alternative method using innerHTML (commented out)
+    /*
+    addButton.addEventListener('click', function() {
+      itemCount++;
+      const newItem = document.createElement('li');
+      newItem.innerHTML = `
+        <span>Item ${itemCount}</span>
+        <span class="item-number">#${itemCount}</span>
+      `;
+      list.appendChild(newItem);
+    });
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      min-width: 400px;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    
+    .timer-display {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin: 20px 0;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    .time {
+      font-size: 72px;
+      font-weight: bold;
+      letter-spacing: 5px;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .time-unit {
+      font-size: 14px;
+      margin-top: 5px;
+      opacity: 0.9;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    
+    #startBtn {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    #startBtn:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    }
+    
+    #pauseBtn {
+      background: #ff9800;
+      color: white;
+    }
+    
+    #pauseBtn:hover {
+      background: #e68900;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+    }
+    
+    #resetBtn {
+      background: #f44336;
+      color: white;
+    }
+    
+    #resetBtn:hover {
+      background: #da190b;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+    }
+    
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .input-section {
+      margin-bottom: 20px;
+    }
+    
+    .input-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    
+    input[type="number"] {
+      width: 80px;
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    label {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #666;
+      font-weight: bold;
+    }
+    
+    .status.running {
+      color: #4CAF50;
+    }
+    
+    .status.paused {
+      color: #ff9800;
+    }
+    
+    .status.finished {
+      color: #f44336;
+      font-size: 18px;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .pulse {
+      animation: pulse 1s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Countdown Timer</h1>
+    <p class="subtitle">Set your countdown time and start the timer</p>
+    
+    <div class="input-section">
+      <div class="input-group">
+        <div>
+          <input type="number" id="minutes" value="1" min="0" max="59">
+          <label>Minutes</label>
+        </div>
+        <span style="font-size: 24px; color: #999;">:</span>
+        <div>
+          <input type="number" id="seconds" value="0" min="0" max="59">
+          <label>Seconds</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="timer-display">
+      <div class="time" id="timerDisplay">01:00</div>
+      <div class="time-unit">TIME REMAINING</div>
+    </div>
+    
+    <div class="controls">
+      <button id="startBtn">Start</button>
+      <button id="pauseBtn" disabled>Pause</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+    
+    <div class="status" id="status">Ready to start</div>
+  </div>
+
+  <script>
+    // Get elements
+    const timerDisplay = document.getElementById('timerDisplay');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const minutesInput = document.getElementById('minutes');
+    const secondsInput = document.getElementById('seconds');
+    const statusElement = document.getElementById('status');
+    
+    let intervalId = null;
+    let totalSeconds = 60; // Default 1 minute
+    let remainingSeconds = totalSeconds;
+    let isRunning = false;
+    
+    // Format time display
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+    
+    // Update display
+    function updateDisplay() {
+      timerDisplay.textContent = formatTime(remainingSeconds);
+    }
+    
+    // Update total seconds from inputs
+    function updateTotalSeconds() {
+      const mins = parseInt(minutesInput.value) || 0;
+      const secs = parseInt(secondsInput.value) || 0;
+      totalSeconds = (mins * 60) + secs;
+      remainingSeconds = totalSeconds;
+      updateDisplay();
+    }
+    
+    // Start timer
+    function startTimer() {
+      if (isRunning) return;
+      
+      if (remainingSeconds === 0) {
+        updateTotalSeconds();
+      }
+      
+      isRunning = true;
+      startBtn.disabled = true;
+      pauseBtn.disabled = false;
+      minutesInput.disabled = true;
+      secondsInput.disabled = true;
+      
+      statusElement.textContent = 'Running...';
+      statusElement.className = 'status running';
+      
+      intervalId = setInterval(() => {
+        remainingSeconds--;
+        updateDisplay();
+        
+        // Add pulse effect when less than 10 seconds
+        if (remainingSeconds <= 10 && remainingSeconds > 0) {
+          timerDisplay.parentElement.classList.add('pulse');
+        }
+        
+        // Timer finished
+        if (remainingSeconds <= 0) {
+          clearInterval(intervalId);
+          isRunning = false;
+          startBtn.disabled = false;
+          pauseBtn.disabled = true;
+          minutesInput.disabled = false;
+          secondsInput.disabled = false;
+          
+          statusElement.textContent = 'Time\'s up!';
+          statusElement.className = 'status finished';
+          timerDisplay.parentElement.classList.remove('pulse');
+          
+          // Play alert (optional - browser may require user interaction)
+          alert('Time\'s up!');
+        }
+      }, 1000);
+    }
+    
+    // Pause timer
+    function pauseTimer() {
+      clearInterval(intervalId);
+      isRunning = false;
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+      
+      statusElement.textContent = 'Paused';
+      statusElement.className = 'status paused';
+      timerDisplay.parentElement.classList.remove('pulse');
+    }
+    
+    // Reset timer
+    function resetTimer() {
+      clearInterval(intervalId);
+      isRunning = false;
+      updateTotalSeconds();
+      
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+      minutesInput.disabled = false;
+      secondsInput.disabled = false;
+      
+      statusElement.textContent = 'Reset - Ready to start';
+      statusElement.className = 'status';
+      timerDisplay.parentElement.classList.remove('pulse');
+    }
+    
+    // Event listeners
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', resetTimer);
+    
+    minutesInput.addEventListener('input', () => {
+      if (!isRunning) updateTotalSeconds();
+    });
+    
+    secondsInput.addEventListener('input', () => {
+      if (!isRunning) updateTotalSeconds();
+    });
+    
+    // Initialize display
+    updateDisplay();
+  </script>
+</body>
+</html>

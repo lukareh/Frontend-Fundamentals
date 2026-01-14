@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remove Element from DOM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      min-width: 350px;
+    }
+    
+    h1 {
+      color: #333;
+      margin-top: 0;
+    }
+    
+    #removeMe {
+      font-size: 20px;
+      color: #333;
+      padding: 20px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      margin: 20px 0;
+      transition: all 0.3s ease;
+    }
+    
+    #removeMe.removing {
+      animation: fadeOut 0.5s ease;
+    }
+    
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+    }
+    
+    #removeBtn {
+      background: #fa709a;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #removeBtn:hover {
+      background: #fee140;
+      color: #333;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    #removeBtn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .success-message {
+      color: #4CAF50;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Remove Element Demo</h1>
+    <p id="removeMe">Remove this text</p>
+    <button id="removeBtn">Remove</button>
+    <div class="success-message" id="successMsg">Element successfully removed!</div>
+  </div>
+
+  <script>
+    // Get elements
+    const elementToRemove = document.getElementById('removeMe');
+    const removeButton = document.getElementById('removeBtn');
+    const successMsg = document.getElementById('successMsg');
+    
+    // Add click event listener
+    removeButton.addEventListener('click', function() {
+      // Add removing animation class
+      elementToRemove.classList.add('removing');
+      
+      // Remove the element after animation completes
+      setTimeout(() => {
+        elementToRemove.remove();
+        
+        // Show success message
+        successMsg.style.display = 'block';
+        
+        // Disable button
+        removeButton.disabled = true;
+        removeButton.textContent = 'Element Removed';
+        
+        console.log('Element removed from DOM');
+      }, 500); // Wait for animation to complete
+    });
+    
+    // Alternative methods for removing elements:
+    
+    // Method 1: Using remove() - Modern approach
+    // element.remove();
+    
+    // Method 2: Using removeChild() - Older approach
+    // element.parentNode.removeChild(element);
+    
+    // Method 3: Using innerHTML
+    // parentElement.innerHTML = '';
+  </script>
+</body>
+</html>
